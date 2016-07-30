@@ -6,6 +6,13 @@ risoluzione = (1280, 720)
 gameDisplay = pygame.display.set_mode(risoluzione)
 
 
+def blockable(func):
+    def wrapper(self, *args):
+        if not self.paralyzed:
+            return func(self, *args)
+    return wrapper
+
+
 #CLASSI:
 
 #generic class for characters
@@ -34,7 +41,7 @@ class Character(pygame.sprite.Sprite):
         self.width = size[0] / 4
         self.height = size[1] / 4
 
-        self.deep = self.y + self.height
+        self.layer = 0
 
         #get char's poses list
         self.pose_D = [(0, 0),
@@ -177,10 +184,7 @@ class Character(pygame.sprite.Sprite):
 
     #what happens after collisions?
     def collisions_manager(self):
-        if self.base.collidelist() != -1:
-            self.collided = True
-        else:
-            self.collided = False
+        pass
 
     def movement(self):
         # Sprite class methods attributes
@@ -192,8 +196,7 @@ class Character(pygame.sprite.Sprite):
         self.rect.centerx = int(self.x)
         self.rect.centery = int(self.y)
         #compute deep (for layered updates)
-        self.deep = self.y + self.height / 2
-        print(self.deep)
+        self.layer = self.y + self.height / 2
         #base for collisions
         self.base = pygame.Rect(self.rect.x,
                                 self.rect.y + self.rect.height - (self.rect.width/2),
@@ -217,7 +220,7 @@ class Player(Character):
         self.name = "Oswaldo"
 
         super(Player, self).__init__(*group)
-        #quello che viene messo sotto super sovrascrive gli attributi del Character generico
+        # quello che viene messo sotto super sovrascrive gli attributi del Character generico
 
         self.walk_down = False
         self.walk_left = False
@@ -226,7 +229,7 @@ class Player(Character):
 
         self.speed = 5
 
-        #STAT
+        # STAT
         self.HP = 200
         self.MP = 50
         self.TP = 0
@@ -237,7 +240,8 @@ class Player(Character):
         self.DEX = 20
         self.LUK = 3
 
-    #make player respond to inputs
+    # make player respond to inputs
+    @blockable
     def obey(self):
         if self.walk_down:
             self.direction = "down"

@@ -23,6 +23,7 @@ def main():
 
     #game controller
     status = game_controller.Status(characters, maps, gameDisplay)
+    status.load_area()
 
     #CICLO PRINCIPALE DEL GIOCO:
     while not eventi.gameOver:
