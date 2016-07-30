@@ -43,7 +43,7 @@ class Character(pygame.sprite.Sprite):
 
         self.layer = 0
 
-        #get char's poses list
+        # get char's poses list
         self.pose_D = [(0, 0),
                        (size[0] / 4, 0),
                        (size[0] / 2, 0),
@@ -66,19 +66,37 @@ class Character(pygame.sprite.Sprite):
         self.p = 0
         self.frame = 0
 
-        #create rect and image attributes of the Sprite()
+        # create rect and image attributes of the Sprite()
         self.image = self.foglio.subsurface([self.actual_pose[0],
                                              self.actual_pose[1],
                                              self.width,
                                              self.height]).copy()
         self.rect = self.image.get_rect()
 
-        #attributes for collisions
+        # attributes for collisions
         self.collided = False
-        self.base = pygame.Rect(self.rect.x,
+        #base
+        self.base = pygame.sprite.Sprite()
+        self.update_base()
+        self.base.image = self.image.subsurface([32, 32, 32, 32]).copy()
+        self.base.mask = pygame.mask.from_surface(self.image)
+
+    def update_base(self):
+        self.base.rect = pygame.Rect(self.rect.x,
                                 self.rect.y + self.rect.height - (self.rect.width / 2),
                                 self.rect.width,
                                 self.rect.width)
+
+        # passability
+        # self.base = pygame.sprite.Sprite()
+        # self.base.image = pygame.Surface([int(self.rect.width), int(self.rect.width)])
+        # self.base.image.fill([0, 0, 0])
+        # self.base.rect = self.base.image.get_rect()
+        # self.base.rect.x = self.x
+        # self.base.rect.y = self.y
+        # #bit mask is empty... :(
+        # self.base.mask = pygame.mask.from_surface(self.base.image)
+
 
     def parameters_initialization(self):
         self.direction = "down"
@@ -102,13 +120,13 @@ class Character(pygame.sprite.Sprite):
         self.frozen = 0
         self.paralyzed = 0
 
-    #draw character from spritesheet
+    # draw character from spritesheet
     def disegna(self, screen):
         x = self.x - self.width / 2
         y = self.y - self.height / 2
         screen.blit(self.image, (x, y))
 
-    #roll spritesheet frames
+    # roll spritesheet frames
     def slide_frame(self):
 
         if self.p < 60:
@@ -125,10 +143,10 @@ class Character(pygame.sprite.Sprite):
         elif 45 < self.p < 60:
             self.frame = 3
 
-        #print player.frame
+        # print player.frame
         return self.frame
 
-    #move character
+    # move character
     def move_char(self, direction):
         if direction == "down":
             self.direction = "down"
@@ -198,10 +216,8 @@ class Character(pygame.sprite.Sprite):
         #compute deep (for layered updates)
         self.layer = self.y + self.height / 2
         #base for collisions
-        self.base = pygame.Rect(self.rect.x,
-                                self.rect.y + self.rect.height - (self.rect.width/2),
-                                self.rect.width,
-                                self.rect.width)
+        self.update_base()
+
 
     def update(self):
         self.calcoli_parametri()

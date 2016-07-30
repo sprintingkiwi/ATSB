@@ -46,8 +46,10 @@ class Status():
         #ground
         self.ground = self.current_area.game_map.components[0]
 
+        self.passability = self.current_area.game_map.components[1]
+
         #overlay
-        self.overlay = self.current_area.game_map.components[1]
+        self.overlay = self.current_area.game_map.components[2]
 
         self.enemy_group = self.current_area.enemy_group
 
@@ -58,11 +60,11 @@ class Status():
 
     def check_warps(self):
         for warp in self.current_area.warps:
-            if not warp.rect.colliderect(self.player.base):
+            if not warp.rect.colliderect(self.player.base.rect):
                 self.change_area = True
 
         for warp in self.current_area.warps:
-            if warp.rect.colliderect(self.player.base) and self.change_area:
+            if warp.rect.colliderect(self.player.base.rect) and self.change_area:
                 print "warp!"
                 print(self.areas)
                 print(warp.dest_map)
@@ -71,18 +73,28 @@ class Status():
                 self.player.x, self.player.y = warp.dest_coords
                 self.change_area = False
 
-    def calcola_collisioni(self):
-        pass
+    def check_collisions(self):
+        # passability
+        if pygame.sprite.collide_mask(self.player.base, self.passability.sprites()[0]):
+            if self.player.direction == "down":
+                self.player.y -= self.player.speed
+            if self.player.direction == "left":
+                self.player.x += self.player.speed
+            if self.player.direction == "right":
+                self.player.x -= self.player.speed
+            if self.player.direction == "up":
+                self.player.y += self.player.speed
 
     def update_elements(self):
+
+        self.check_collisions()
+
         self.all_characters.update()
 
         # order sprites in layers
         for sprite in self.all_characters:
             # print(sprite, ":", sprite.layer)
             self.all_characters.change_layer(sprite, sprite.layer)
-
-        self.calcola_collisioni()
 
         self.check_warps()
 
