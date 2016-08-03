@@ -2,10 +2,10 @@ import pygame
 import strategie
 
 
-risoluzione = (1280, 720)
-gameDisplay = pygame.display.set_mode(risoluzione)
+# risoluzione = (1280, 720)
+# gameDisplay = pygame.display.set_mode(risoluzione)
 
-
+# decorator
 def blockable(func):
     def wrapper(self, *args):
         if not self.paralyzed:
@@ -245,6 +245,8 @@ class Player(Character):
 
         self.speed = 5
 
+        self.interaction_area = pygame.Rect([0, 0, 64, 64])
+
         # STAT
         self.HP = 200
         self.MP = 50
@@ -276,9 +278,26 @@ class Player(Character):
             self.actual_pose = self.pose_U[self.slide_frame()]
             self.y = self.y - self.speed
 
+    def update_interaction_area(self):
+        if self.direction == "down":
+            x = self.x
+            y = self.y + 32
+        if self.direction == "right":
+            x = self.x + 32
+            y = self.y
+        if self.direction == "left":
+            x = self.x - 32
+            y = self.y
+        if self.direction == "up":
+            x = self.x
+            y = self.y - 32
+        self.interaction_area.centerx = x
+        self.interaction_area.centery = y
+
     #UPDATE
     def update(self, *group):
         super(Player, self).update(*group)
+        self.update_interaction_area()
         self.obey()
 
 
@@ -288,6 +307,7 @@ class Player(Character):
 class Enemy(Character):
     def __init__(self, *group):
         super(Enemy, self).__init__(*group)
+        self.talk = "Hi, how are you?"
 
     def update(self, *group):
         super(Enemy, self).update(*group)
@@ -318,3 +338,15 @@ class Ogre(Enemy):
     def update(self, *group):
         super(Ogre, self).update(*group)
         strategie.suegiu(self, 100, 500)
+
+
+class Monster(pygame.sprite.Sprite):
+    def __init__(self, image_path):
+        self.x = 0
+        self.y = 0
+        self.image = pygame.image.load(image_path).convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.centerx = int(self.x)
+        self.rect.centery = int(self.y)
+        self.mask = pygame.mask.from_surface(self.image)
+        Character.parameters_initialization()

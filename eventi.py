@@ -7,7 +7,7 @@ game_speed = 60
 
 
 #events control
-def manage_events(player):
+def manage_events(player, status):
     global gameOver, game_speed
     for event in pygame.event.get():
 
@@ -15,9 +15,9 @@ def manage_events(player):
         if event.type == pygame.QUIT:
             gameOver = True
 
-        #PLAYER MOVEMENT
-        #keydown
+        # KEYDOWN
         if event.type == pygame.KEYDOWN:
+            # PLAYER MOVEMENT
             if event.key == pygame.K_RIGHT:
                 player.walk_right = True
             if event.key == pygame.K_LEFT:
@@ -26,8 +26,13 @@ def manage_events(player):
                 player.walk_up = True
             if event.key == pygame.K_DOWN:
                 player.walk_down = True
-        #keyup
+            #BUTTONS A e B
+            if event.key == pygame.K_z:
+                status.buttonA = True
+
+        # KEYUP
         if event.type == pygame.KEYUP:
+            # PLAYER MOVEMENT
             if event.key == pygame.K_RIGHT:
                 player.walk_right = False
                 player.actual_pose = player.pose_R[0]
@@ -40,16 +45,18 @@ def manage_events(player):
             if event.key == pygame.K_DOWN:
                 player.walk_down = False
                 player.actual_pose = player.pose_D[0]
+            # BUTTONS A e B
+            if event.key == pygame.K_z:
+                status.buttonA = False
 
         #ACTIONS
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                player.act = True
-                player.skill = skills.Explosion()
-            if event.key == pygame.K_s:
-                player.action(skills.Empty())
-            if event.key == pygame.K_d:
-                player.action(skills.Attack())
+            # if event.key == pygame.K_a:
+            #     player.act = True
+            #     player.skill = skills.Explosion()
+            # if event.key == pygame.K_s:
+            #     player.action(skills.Empty())
+            # if event.key == pygame.K_d:
+            #     player.action(skills.Attack())
 
         #game speed
         if event.type == pygame.KEYDOWN:

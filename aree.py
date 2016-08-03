@@ -4,8 +4,28 @@ import mappe
 
 
 class Area():
-    def __init__(self):
-        pass
+    def __init__(self, characters, maps, ID):
+
+        self.ID = ID
+
+        self.music = dictionaries[ID]["music"]
+
+        self.game_map = mappe.GameMap(maps, dictionaries[ID]["game_map"])
+
+        self.enemies = pygame.sprite.Group()
+        for enemy in dictionaries[ID]["enemies"]:
+            print enemy
+            sprite = getattr(personaggi, enemy["kind"])(characters,
+                                                        enemy["position"][0],
+                                                        enemy["position"][1])
+            sprite.talk = enemy["talk"]
+            self.enemies.add(sprite)
+
+        self.others = pygame.sprite.Group()
+        for other in dictionaries[ID]["others"]:
+            self.enemies.add(other)
+
+        self.warps = dictionaries[ID]["warps"]
 
 class Warp:
     def __init__(self, rect, dest):
@@ -14,46 +34,38 @@ class Warp:
         self.dest_coords = dest[1]
 
 
-class Area1(Area):
+dictionaries = [
+                   {  # AREA 0
+                        "music": "music/Arpa.mp3",
+                        "game_map": "map1",
 
-    def __init__(self, characters, maps):
+                        "enemies": [{  # first Ogre
+                                     "kind": "Ogre",
+                                     "position": (950, 200),
+                                     "talk": "Go away!"},
 
-        self.ID = 1
+                                    {  # second Ogre
+                                     "kind": "Ogre",
+                                     "position": (500, 100),
+                                     "talk": "You fool!"}],
 
-        self.music = "music/Arpa.mp3"
+                        "others": [],
 
-        self.game_map = mappe.GameMap(maps, "map1")
+                        "warps": [Warp(rect=[0, 0, 32, 64], dest=[1, [1280, 32]]),
+                                  Warp(rect=[1240, 680, 32, 32], dest=[1, [500, 500]])]
+                   },
 
-        self.enemy1 = personaggi.Ogre(characters, 950, 200)
-        self.enemy1.name = "Ogre1"
-        self.enemy2 = personaggi.Ogre(characters, 500, 100)
-        self.enemy2.name = "Ogre2"
+                   {  # AREA 1
+                        "music": "music/Arpa.mp3",
+                        "game_map": "map2",
 
-        self.enemy_group = pygame.sprite.Group()
-        self.enemy_group.add(self.enemy1, self.enemy2)
+                        "enemies": [{  # first Ogre
+                                     "kind": "Ogre",
+                                     "position": (600, 0),
+                                     "talk": "This is another map..."}],
 
-        self.warps = [
-                      Warp(rect=[0, 0, 32, 64], dest=[2, [1280, 32]]),
-                      Warp(rect=[1240, 680, 32, 32], dest=[2, [500, 500]])
-                     ]
+                        "others": [],
 
-
-class Area2(Area):
-
-    def __init__(self, characters, maps):
-
-        self.ID = 1
-
-        self.music = "music/Arpa.mp3"
-
-        self.game_map = mappe.GameMap(maps, "map2")
-
-        self.enemy1 = personaggi.Ogre(characters, 600, 0)
-        self.enemy1.name = "Ogre1"
-
-        self.enemy_group = pygame.sprite.Group()
-        self.enemy_group.add(self.enemy1)
-
-        self.warps = [
-                      Warp(rect=[1280, 0, 32, 64], dest=[1, [0, 32]])
-                     ]
+                        "warps": [Warp(rect=[1280, 0, 32, 64], dest=[0, [0, 32]])]
+                   }
+               ]
