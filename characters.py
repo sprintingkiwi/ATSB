@@ -1,5 +1,5 @@
 import pygame
-import strategie
+import strategies
 
 
 # risoluzione = (1280, 720)
@@ -337,7 +337,7 @@ class Ogre(Enemy):
 
     def update(self, *group):
         super(Ogre, self).update(*group)
-        strategie.suegiu(self, 100, 500)
+        strategies.suegiu(self, 100, 500)
 
 
 class Monster(pygame.sprite.Sprite):

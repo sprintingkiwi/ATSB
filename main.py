@@ -2,31 +2,23 @@ import pygame
 
 pygame.init()
 
-import immagini
-import eventi
+
+import events
 import game_controller
 
 
 def main():
     #INIZIALIZZAZIONE:
 
-    #schermo
-    risoluzione = (1280, 720)
-    gameDisplay = pygame.display.set_mode(risoluzione)
-
     #orologio
     orologio = pygame.time.Clock()
 
-    #dizionari graphics
-    characters = immagini.load_chars()
-    maps = immagini.load_maps()
-
     #game controller
-    status = game_controller.Status(characters, maps, gameDisplay)
+    status = game_controller.Status()
     status.load_area()
 
     #CICLO PRINCIPALE DEL GIOCO:
-    while not eventi.gameOver:
+    while not events.gameOver:
 
         status.update()
 
@@ -38,7 +30,7 @@ def main():
                                #player_width+248,
                                #player_height+248)
 
-        orologio.tick(eventi.game_speed)
+        orologio.tick(events.game_speed)
 
     pygame.quit()
 

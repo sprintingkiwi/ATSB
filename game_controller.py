@@ -1,34 +1,51 @@
 import pygame
-import aree
-import personaggi
-import eventi
+import graphics
+import areas
+import characters
+import events
 import HUD
+import os
 import math
 import copy
 
 
 class Status():
 
-    def __init__(self, characters, maps, screen):
+    def __init__(self):
+
+        # Game Display
+        self.resolution = [1280, 720]
+        self.screen = pygame.display.set_mode(self.resolution)
+
+        # Graphic Dictionaries
+        self.char_dict = graphics.load_chars()
+        self.maps_dict = graphics.load_maps()
+
         # create areas
         self.areas = {}
-        for area in range(len(aree.dictionaries)):
-            self.areas[area] = aree.Area(characters, maps, area)
+        # for area in range(len(areas.dictionaries)):
+        area_files = []
+        for item in os.listdir("areas_data/"):
+            if item.startswith("area") and item.endswith("py"):
+                area_files.append(item)
+        for area in range(len(area_files)):
+            self.areas[area] = areas.Area(self.char_dict, self.maps_dict, area)
 
         # create player
-        self.player = personaggi.Player(characters, 500, 0)
+        self.player = characters.Player(self.char_dict, 500, 0)
 
         # create player's party
         self.party = pygame.sprite.Group()
 
-        # group for every character
-        self.all_characters = pygame.sprite.LayeredUpdates()
+        # group for NPC
+        self.NPC = pygame.sprite.Group()
+
+        # group for every character that will be drawn
+        self.characters = pygame.sprite.LayeredUpdates()
 
         # determine if a new area is to load
         self.change_area = False
         self.current_area = self.areas[0]
-
-        self.screen = screen
 
         self.buttonA = False
         self.buttonB = False
@@ -38,19 +55,19 @@ class Status():
         self.time = pygame.time.get_ticks()
 
     def buttons_effect(self):
-        for en in self.enemies:
-            if self.buttonA and self.player.interaction_area.colliderect(en.base.rect):
-                self.HUD.add(HUD.TextBox(en.talk))
-            elif self.buttonA and not self.player.interaction_area.colliderect(en.base.rect):
+        for char in self.NPC:
+            if self.buttonA and self.player.interaction_area.colliderect(char.base.rect):
+                self.HUD.add(HUD.TextBox(char.talk))
+            elif self.buttonA and not self.player.interaction_area.colliderect(char.base.rect):
                 self.HUD.empty()
 
     def load_area(self):
         # remove last area's trash
         if self.change_area:
-            for item in self.all_characters:
-                self.all_characters.remove(item)
-            for item in self.enemies:
-                self.enemies.remove(item)
+            for item in self.characters:
+                self.characters.remove(item)
+            for item in self.characters:
+                self.characters.remove(item)
 
 
         # load and play music
@@ -66,16 +83,15 @@ class Status():
         # load overlay group
         self.overlay = self.current_area.game_map.overlay
 
-        # load enemies group
-        self.enemies = self.current_area.enemies
+        # load area's characters
+        self.NPC = self.current_area.characters
 
-        #load others group
-        self.others = self.current_area.others
+        # add sprites to characters group
+        for char in self.current_area.characters:
+            self.characters.add(char, layer=char.layer)
+        self.characters.add(self.player, layer=self.player.layer)
 
-        # add sprites to all_characters group
-        for en in self.enemies:
-            self.all_characters.add(en, layer=en.layer)
-        self.all_characters.add(self.player, layer=self.player.layer)
+        self.current_area.start(self)
 
     def check_warps(self):
         for warp in self.current_area.warps:
@@ -108,12 +124,14 @@ class Status():
 
         self.check_collisions()
 
-        self.all_characters.update()
+        self.current_area.update(self)
+
+        self.characters.update()
 
         # order sprites in layers
-        for sprite in self.all_characters:
+        for sprite in self.characters:
             # print(sprite, ":", sprite.layer)
-            self.all_characters.change_layer(sprite, sprite.layer)
+            self.characters.change_layer(sprite, sprite.layer)
 
         self.check_warps()
 
@@ -122,7 +140,7 @@ class Status():
         self.ground.draw(self.screen)
 
         # draw characters
-        self.all_characters.draw(self.screen)
+        self.characters.draw(self.screen)
 
         # draw overlay
         self.overlay.draw(self.screen)
@@ -133,7 +151,7 @@ class Status():
     #general UPDATE of the game status
     def update(self):
 
-        eventi.manage_events(self.player, self)
+        events.manage_events(self.player, self)
 
         self.buttons_effect()
 
