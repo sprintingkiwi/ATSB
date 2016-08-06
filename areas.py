@@ -1,6 +1,5 @@
 import pygame
 import characters
-import maps
 import imp
 
 
@@ -13,7 +12,11 @@ class Area():
 
         self.music = self.data.music
 
-        self.game_map = maps.GameMap(maps_dict, self.data.game_map)
+        #Load MAP layers
+        self.game_map = self.data.game_map
+        self.ground = maps_dict[self.game_map][0]
+        self.passability = maps_dict[self.game_map][1]
+        self.overlay = maps_dict[self.game_map][2]
 
         self.characters = pygame.sprite.Group()
         for enemy in self.data.characters:

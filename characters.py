@@ -259,7 +259,7 @@ class Player(Character):
         self.LUK = 3
 
     # make player respond to inputs
-    @blockable
+    @blockable  # decorator to paralyze the player (not for map passability stuff)
     def obey(self):
         if self.walk_down:
             self.direction = "down"
@@ -340,13 +340,16 @@ class Ogre(Enemy):
         strategies.suegiu(self, 100, 500)
 
 
-class Monster(pygame.sprite.Sprite):
-    def __init__(self, image_path):
+class Monster(Character):
+    def __init__(self, graphics, battler):
+        pygame.sprite.Sprite.__init__(self)
+
         self.x = 0
         self.y = 0
-        self.image = pygame.image.load(image_path).convert_alpha()
+        self.image = graphics[battler]
         self.rect = self.image.get_rect()
         self.rect.centerx = int(self.x)
         self.rect.centery = int(self.y)
         self.mask = pygame.mask.from_surface(self.image)
-        Character.parameters_initialization()
+
+        Character.parameters_initialization(self)
