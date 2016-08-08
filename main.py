@@ -1,11 +1,7 @@
 import pygame
-
-pygame.init()
-
-
-import events
 import game_controller
 
+pygame.init()
 
 def main():
     #INIZIALIZZAZIONE:
@@ -15,10 +11,9 @@ def main():
 
     #game controller
     status = game_controller.Status()
-    status.load_area()
 
     #CICLO PRINCIPALE DEL GIOCO:
-    while not events.gameOver:
+    while not status.GAMEOVER:
 
         status.update()
 
@@ -30,7 +25,7 @@ def main():
                                #player_width+248,
                                #player_height+248)
 
-        orologio.tick(events.game_speed)
+        orologio.tick(status.game_speed)
 
     pygame.quit()
 

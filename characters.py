@@ -18,21 +18,23 @@ def blockable(func):
 #generic class for characters
 class Character(pygame.sprite.Sprite):
 
-    def __init__(self, graphics, pos_x, pos_y):
+    def __init__(self, status, position):
 
         #sprite heritage
         super(Character, self).__init__()
 
         #initialization
-        self.graphics = graphics
-        self.x = pos_x
-        self.y = pos_y
+        self.graphics = status.char_dict
+        self.x = position[0]
+        self.y = position[1]
+        self.direction = "down"
+        self.speed = 1
+        self.paralyzed = False
         self.actionID = 1
         self.act = False
         self.skill = None
 
         self.graphical_initialization()
-        self.parameters_initialization()
 
     def graphical_initialization(self):
         self.foglio = self.graphics["char" + str(self.charID) +
@@ -96,35 +98,6 @@ class Character(pygame.sprite.Sprite):
         # self.base.rect.y = self.y
         # #bit mask is empty... :(
         # self.base.mask = pygame.mask.from_surface(self.base.image)
-
-
-    def parameters_initialization(self):
-        self.direction = "down"
-        self.speed = 1
-
-        #STAT
-        self.HP = 100
-        self.MP = 50
-        self.TP = 0
-        self.ATK = 20
-        self.DEF = 10
-        self.MATK = 5
-        self.MDEF = 5
-        self.DEX = 10
-        self.LUK = 1
-
-        #STATES
-        self.dead = False
-        self.burnt = 0
-        self.poisoned = 0
-        self.frozen = 0
-        self.paralyzed = 0
-
-    # draw character from spritesheet
-    def disegna(self, screen):
-        x = self.x - self.width / 2
-        y = self.y - self.height / 2
-        screen.blit(self.image, (x, y))
 
     # roll spritesheet frames
     def slide_frame(self):
@@ -195,11 +168,6 @@ class Character(pygame.sprite.Sprite):
         if self.frame == 3:
             self.act = False
 
-    #parameters math
-    def calcoli_parametri(self):
-        if self.HP < 1:
-            self.dead = True
-
     #what happens after collisions?
     def collisions_manager(self):
         pass
@@ -220,7 +188,6 @@ class Character(pygame.sprite.Sprite):
 
 
     def update(self):
-        self.calcoli_parametri()
         #self.collisions_manager()
         self.movement()
         if self.act is True:
@@ -340,16 +307,38 @@ class Ogre(Enemy):
         strategies.suegiu(self, 100, 500)
 
 
-class Monster(Character):
-    def __init__(self, graphics, battler):
+class Monster(pygame.sprite.Sprite):
+    def __init__(self, status, name):
         pygame.sprite.Sprite.__init__(self)
 
-        self.x = 0
-        self.y = 0
-        self.image = graphics[battler]
+        self.x = 200
+        self.y = 300
+        self.image = status.battlers_dict[name]
         self.rect = self.image.get_rect()
         self.rect.centerx = int(self.x)
         self.rect.centery = int(self.y)
-        self.mask = pygame.mask.from_surface(self.image)
+        self.layer = 0
+        self.formation = 0
 
-        Character.parameters_initialization(self)
+    def parameters_initialization(self):
+        # STAT
+        self.HP = 100
+        self.MP = 50
+        self.TP = 0
+        self.ATK = 20
+        self.DEF = 10
+        self.MATK = 5
+        self.MDEF = 5
+        self.DEX = 10
+        self.LUK = 1
+
+        # STATES
+        self.dead = False
+        self.burnt = 0
+        self.poisoned = 0
+        self.frozen = 0
+        self.paralyzed = 0
+
+    def update(self):
+        self.rect.centerx = int(self.x)
+        self.rect.centery = int(self.y)

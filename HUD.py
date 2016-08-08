@@ -3,6 +3,7 @@ import pygame
 
 class TextBox(pygame.sprite.Sprite):
     def __init__(self,
+                 status,
                  text,
                  font_name="Liberation Serif",
                  font_size=64,
