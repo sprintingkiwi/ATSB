@@ -12,11 +12,14 @@ boundaries = {"S": None,
               "N": None}
 
 characters = [{  # first Ogre
-             "kind": "Ogre",
+             "name": "Ogre3",
+             "ID": 3,
              "position": [600, 0],
              "talk": "This is another map..."}]
 
-warps = [([1280, 0, 32, 64], [0, [0, 32]])]
+warps = [{"entrance": pygame.Rect([1280, 0, 32, 64]),
+         "dest_area": 0,
+         "dest_rect": [0, 32]}]
 
 battleback = "battleback1"
 
@@ -29,6 +32,6 @@ def start(status):
 def update(status):
        collided = pygame.sprite.spritecollide(status.player, status.NPC, False)
        if len(collided) > 0:
-              status.load_battle(0)
+              status.load_scene(status.battles[0])
        else:
               status.inbattle = False

@@ -22,6 +22,10 @@ def manage_events(status):
             #BUTTONS A e B
             if event.key == pygame.K_z:
                 status.buttonA = True
+                print("A")
+            if event.key == pygame.K_x:
+                status.buttonB = True
+                print("B")
 
         # KEYUP
         if event.type == pygame.KEYUP:

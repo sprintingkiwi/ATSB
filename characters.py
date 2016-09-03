@@ -1,5 +1,6 @@
 import pygame
 import strategies
+import HUD
 
 
 # risoluzione = (1280, 720)
@@ -31,7 +32,7 @@ class Character(pygame.sprite.Sprite):
         self.speed = 1
         self.paralyzed = False
         self.actionID = 1
-        self.act = False
+        # self.act = False
         self.skill = None
 
         self.graphical_initialization()
@@ -150,23 +151,25 @@ class Character(pygame.sprite.Sprite):
             self.actual_pose = self.pose_U[0]
 
     #skill animations
-    def action(self, skill):
-        print(self.name + " is doing action: " + str(skill.actionID))
-
-        self.actionID = skill.actionID
-        self.graphical_initialization()
-
-        if self.direction == "down":
-            self.actual_pose = self.pose_D[self.slide_frame()]
-        if self.direction == "left":
-            self.actual_pose = self.pose_L[self.slide_frame()]
-        if self.direction == "right":
-            self.actual_pose = self.pose_R[self.slide_frame()]
-        if self.direction == "up":
-            self.actual_pose = self.pose_U[self.slide_frame()]
-
-        if self.frame == 3:
-            self.act = False
+    # def action(self, status):
+    #     pass
+        # pass
+        # print(self.name + " is doing action: " + str(skill.actionID))
+        #
+        # self.actionID = skill.actionID
+        # self.graphical_initialization()
+        #
+        # if self.direction == "down":
+        #     self.actual_pose = self.pose_D[self.slide_frame()]
+        # if self.direction == "left":
+        #     self.actual_pose = self.pose_L[self.slide_frame()]
+        # if self.direction == "right":
+        #     self.actual_pose = self.pose_R[self.slide_frame()]
+        # if self.direction == "up":
+        #     self.actual_pose = self.pose_U[self.slide_frame()]
+        #
+        # if self.frame == 3:
+        #     self.act = False
 
     #what happens after collisions?
     def collisions_manager(self):
@@ -190,8 +193,8 @@ class Character(pygame.sprite.Sprite):
     def update(self):
         #self.collisions_manager()
         self.movement()
-        if self.act is True:
-            self.action(self.skill)
+        # if self.act is True:
+        #     self.action(self.skill)
 
 ########
 
@@ -268,46 +271,28 @@ class Player(Character):
         self.obey()
 
 
-########
+class NPC(Character):
+    def __init__(self, ID, name, *group):
 
-
-class Enemy(Character):
-    def __init__(self, *group):
-        super(Enemy, self).__init__(*group)
+        self.charID = ID
+        self.name = name
         self.talk = "Hi, how are you?"
 
-    def update(self, *group):
-        super(Enemy, self).update(*group)
+        super(NPC, self).__init__(*group)
 
+    def act(self, status):
+        if hasattr(self, 'action'):
+            self.action()
+        else:
+            status.HUD.add(HUD.TextBox(status, self.talk))
 
-
-########
-
-
-class Ogre(Enemy):
-    def __init__(self, *group):
-        self.charID = 3
-        self.name = "Ogre"
-
-        super(Ogre, self).__init__(*group)
-
-        #STAT
-        self.HP = 500
-        self.MP = 0
-        self.TP = 0
-        self.ATK = 70
-        self.DEF = 80
-        self.MATK = 5
-        self.MDEF = 5
-        self.DEX = 5
-        self.LUK = 1
 
     def update(self, *group):
-        super(Ogre, self).update(*group)
+        super(NPC, self).update(*group)
         strategies.suegiu(self, 100, 500)
 
 
-class Monster(pygame.sprite.Sprite):
+class Battler(pygame.sprite.Sprite):
     def __init__(self, status, name):
         pygame.sprite.Sprite.__init__(self)
 

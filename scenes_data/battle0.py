@@ -9,7 +9,7 @@ troops = ["apple", "butter"]
 
 
 def start(status):
-       pass
+       print("OnStart battle function working!")
        
 def update(status):
        pass
