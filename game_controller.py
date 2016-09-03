@@ -2,6 +2,7 @@ import pygame
 import graphics
 import scenes
 import characters
+import monsters
 import events
 import os
 import math
@@ -44,8 +45,8 @@ class Status():
 
         # create player's party
         self.party = pygame.sprite.Group()
-        self.party.add(characters.Battler(self, "dyno"),
-                       characters.Battler(self, "spider"))
+        self.party.add(monsters.Monster(self, "dyno"),
+                       monsters.Monster(self, "spider"))
 
         # group for NPC
         self.NPC = pygame.sprite.Group()

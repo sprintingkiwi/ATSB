@@ -1,5 +1,6 @@
 import pygame
 import characters
+import monsters
 import imp
 import HUD
 
@@ -154,14 +155,14 @@ class Battle():
         self.actors = pygame.sprite.Group()
         for enemy in self.data.troops:
             print enemy
-            sprite = characters.Battler(status, enemy)
+            sprite = monsters.Monster(status, enemy)
             sprite.image = pygame.transform.flip(sprite.image, True, False)
             sprite.x, sprite.y = left_places[i]
             i += 1
             print sprite.x
             self.actors.add(sprite)
 
-        # Load party battlers
+        # Load party Battlers
         right_places = [[1100, 500], [900, 600], [1150, 750], [950, 850]]
         i = 0
         for sprite in status.party:
