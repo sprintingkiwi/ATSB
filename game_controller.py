@@ -26,6 +26,7 @@ class Status():
         # Game Display
         self.resolution = [1280, 720]
         self.screen = pygame.display.set_mode(self.resolution)
+        #self.screen = pygame.display.set_mode(self.resolution, pygame.FULLSCREEN)
 
         # Graphic Dictionaries
         self.char_dict = graphics.load_chars()
