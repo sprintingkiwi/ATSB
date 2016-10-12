@@ -10,6 +10,9 @@ def manage_events(status):
 
         # KEYDOWN
         if event.type == pygame.KEYDOWN:
+            # Pygame-Boy QUIT key
+            if event.key == pygame.K_ESCAPE:
+                status.GAMEOVER = True
             # PLAYER MOVEMENT
             if event.key == pygame.K_RIGHT:
                 status.player.walk_right = True

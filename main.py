@@ -1,5 +1,6 @@
 import pygame
 import game_controller
+import subprocess
 
 pygame.init()
 
@@ -28,6 +29,10 @@ def main():
         orologio.tick(status.game_speed)
 
     pygame.quit()
+    try:
+        subprocess.Popen(["python", "/home/pi/OS.py"])
+    except:
+        pass
 
 
 if __name__ == "__main__":
