@@ -30,7 +30,7 @@ def main():
 
     pygame.quit()
     try:
-        subprocess.Popen(["python", "/home/pi/OS.py"], cwd="/home/pi/")
+        subprocess.Popen(["python", "/home/pi/PYGB_OS/pygbOS.py"], cwd="/home/pi/")
     except:
         pass
 
