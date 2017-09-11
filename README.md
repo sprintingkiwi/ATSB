@@ -1,5 +1,5 @@
 # ATSB
-A simple JRPG game I'm creating while I learn Python and Pygame
+A simple JRPG game engine I'm creating while I learn Python and Pygame
 
 CREDITS:
 - For the Monster pictures, credits go to Georg Eckert (http://www.limbusdev.org/fwm-assets.html)
