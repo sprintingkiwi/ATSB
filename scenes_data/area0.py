@@ -15,7 +15,7 @@ boundaries = {"S": None,
               
               
 def ogre1act():
-       print "ciao"
+       print("ciao")
 
 
 characters = [{  # first Ogre

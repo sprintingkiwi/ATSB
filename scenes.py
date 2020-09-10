@@ -24,8 +24,8 @@ class Area():
         # LOAD CHARACTERS
         self.actors = pygame.sprite.Group()
         for char in self.data.characters:
-            print char
-            print char["ID"]
+            print(char)
+            print(char["ID"])
             sprite = characters.NPC(char["ID"], char["name"], status, char["position"])
             if "action" in char.keys():
                 sprite.action = char["action"]
@@ -110,7 +110,7 @@ class Area():
 
         for warp in self.warps:
             if warp["entrance"].colliderect(status.player.base.rect) and status.change_scene:
-                print "warp!"
+                print("warp!")
                 print(status.change_scene)
                 print(warp["dest_area"])
                 status.load_scene(status.areas[warp["dest_area"]])
@@ -154,12 +154,12 @@ class Battle():
         i = 0
         self.actors = pygame.sprite.Group()
         for enemy in self.data.troops:
-            print enemy
+            print(enemy)
             sprite = monsters.Monster(status, enemy)
             sprite.image = pygame.transform.flip(sprite.image, True, False)
             sprite.x, sprite.y = left_places[i]
             i += 1
-            print sprite.x
+            print(sprite.x)
             self.actors.add(sprite)
 
         # Load party Battlers
@@ -175,7 +175,7 @@ class Battle():
         self.update = self.data.update
 
     def load(self, status):
-        print "loading battle..."
+        print("loading battle...")
         status.inbattle = True
 
         # call OnStart function of the specific area
