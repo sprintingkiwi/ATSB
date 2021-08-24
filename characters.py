@@ -213,7 +213,7 @@ class Player(Character):
         self.walk_right = False
         self.walk_up = False
 
-        self.speed = 5
+        self.speed = 2
 
         self.interaction_area = pygame.Rect([0, 0, 64, 64])
 
